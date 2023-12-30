@@ -11,5 +11,6 @@ export default defineNuxtConfig({
         preload: true
       },
     ],
+    '@nuxt/ui'
   ],
 });
