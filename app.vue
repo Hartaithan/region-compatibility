@@ -1,5 +1,9 @@
 <script setup lang="ts">
 const search = ref('')
+
+watch(search, debounce(() => {
+  console.info('debounced search', search.value)
+}, 500))
 </script>
 
 <template>
