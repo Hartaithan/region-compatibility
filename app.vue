@@ -8,14 +8,17 @@ interface ResultState {
 }
 
 const API_URL = 'https://store.playstation.com/store/api/chihiro/00_09_000/tumbler'
+const params = new URLSearchParams({
+  gameContentType: 'games',
+})
 
 const search = ref<string>('')
 const results = ref<ResultState>({ left: [], right: [], isLoading: false })
 
 watch(search, debounce(async () => {
   results.value.isLoading = true
-  const left: Promise<Results> = fetch(`${API_URL}/tr/tr/999/${search.value}`).then(res => res.json())
-  const right: Promise<Results> = fetch(`${API_URL}/ru/ru/999/${search.value}`).then(res => res.json())
+  const left: Promise<Results> = fetch(`${API_URL}/tr/tr/999/${search.value}?${params}`).then(res => res.json())
+  const right: Promise<Results> = fetch(`${API_URL}/ru/ru/999/${search.value}?${params}`).then(res => res.json())
   try {
     const [leftRes, rightRes] = await Promise.allSettled([left, right])
     if (leftRes.status === 'fulfilled')
