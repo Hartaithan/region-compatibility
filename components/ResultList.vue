@@ -1,9 +1,17 @@
 <script setup lang="ts">
-const props = defineProps(['data'])
+import type { Link } from '~/models/result'
+
+interface Props {
+  data: Link[]
+}
+
+const { data } = defineProps<Props>()
 </script>
 
 <template>
   <UCard class="w-full">
-    <pre class="text-[8px]">{{ props.data }}</pre>
+    <div class="flex flex-col gap-2 overflow-auto">
+      <Result v-for="link of data" :key="link.id" :link="link" />
+    </div>
   </UCard>
 </template>
