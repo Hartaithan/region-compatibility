@@ -31,12 +31,13 @@ watch(search, debounce(async () => {
     console.error('fetch results error', error)
     results.value.isLoading = false
   }
-}, 500))
+}, 700))
 </script>
 
 <template>
   <UInput
-    v-model="search" class="border-gray-200" icon="i-heroicons-magnifying-glass-20-solid" size="xl"
+    v-model="search"
+    :loading="results.isLoading" class="border-gray-200" icon="i-heroicons-magnifying-glass-20-solid" size="xl"
     placeholder="Search..." autocomplete="off" :ui="{ icon: { trailing: { pointer: '' } } }"
   >
     <template #trailing>
