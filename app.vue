@@ -37,8 +37,7 @@ watch(search, debounce(async () => {
 <template>
   <UInput
     v-model="search" class="border-gray-200" icon="i-heroicons-magnifying-glass-20-solid" size="xl"
-    placeholder="Search..."
-    autocomplete="off" :ui="{ icon: { trailing: { pointer: '' } } }"
+    placeholder="Search..." autocomplete="off" :ui="{ icon: { trailing: { pointer: '' } } }"
   >
     <template #trailing>
       <UButton
