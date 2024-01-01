@@ -46,7 +46,7 @@ watch(search, debounce(async () => {
       />
     </template>
   </UInput>
-  <div class="flex grow w-full gap-4">
+  <div class="flex grow h-16 w-full gap-4">
     <ResultList :data="results.left" />
     <ResultList :data="results.right" />
   </div>
