@@ -2,8 +2,8 @@
 import type { Link, Results } from './models/result'
 
 interface ResultState {
-  left: Link[]
-  right: Link[]
+  left: Link[] | null
+  right: Link[] | null
   isLoading: boolean
 }
 
@@ -13,7 +13,7 @@ const params = new URLSearchParams({
 })
 
 const search = ref<string>('')
-const results = ref<ResultState>({ left: [], right: [], isLoading: false })
+const results = ref<ResultState>({ left: null, right: null, isLoading: false })
 
 watch(search, debounce(async () => {
   results.value.isLoading = true
