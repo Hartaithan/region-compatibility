@@ -1,17 +1,13 @@
 <script setup lang="ts">
+import type { CompareTarget } from '~/models/compare'
 import type { Link } from '~/models/result'
 
 interface Props {
   data: Link[] | null
-  compare: Link | null
+  target: CompareTarget
 }
 
-interface Emits {
-  (eventName: 'set', value: Link | null): void
-}
-
-const { data, compare } = defineProps<Props>()
-const emit = defineEmits<Emits>()
+const { data, target } = defineProps<Props>()
 </script>
 
 <template>
@@ -30,7 +26,7 @@ const emit = defineEmits<Emits>()
       </p>
     </div>
     <div v-if="data != null && data.length > 0" class="flex flex-col gap-2">
-      <Result v-for="link of data" :key="link.id" :link="link" :compare="compare" @set="emit('set', $event)" />
+      <Result v-for="link of data" :key="link.id" :link="link" :target="target" />
     </div>
   </UCard>
 </template>

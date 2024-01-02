@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CompareState } from './models/compare'
+import type { CompareProvider, CompareState, CompareTarget } from './models/compare'
 import type { Link, Results } from './models/result'
 
 interface ResultState {
@@ -40,13 +40,14 @@ function resetState() {
   results.value.isLoading = false
 }
 
-function setLeftCompare(value: Link | null) {
-  compare.value.left = value
+function setCompare(target: CompareTarget, value: Link | null) {
+  compare.value[target] = value
 }
 
-function setRightCompare(value: Link | null) {
-  compare.value.right = value
-}
+provide<CompareProvider>('compare', {
+  compare,
+  setCompare,
+})
 
 watch(search, () => {
   if (search.value.trim().length === 0)
@@ -70,8 +71,8 @@ watch(search, () => {
     </template>
   </UInput>
   <div class="flex grow h-16 w-full gap-4">
-    <ResultList :data="results.left" :compare="compare.left" @set="setLeftCompare" />
-    <ResultList :data="results.right" :compare="compare.right" @set="setRightCompare" />
+    <ResultList :data="results.left" target="left" />
+    <ResultList :data="results.right" target="right" />
   </div>
   <ComparisonView :compare="compare" />
 </template>
