@@ -7,7 +7,8 @@ interface ResultState {
   isLoading: boolean
 }
 
-const API_URL = 'https://store.playstation.com/store/api/chihiro/00_09_000/tumbler'
+const runtimeConfig = useRuntimeConfig()
+const API_URL = runtimeConfig.public.baseURL as string
 const params = new URLSearchParams({ gameContentType: 'games' })
 
 const search = ref<string>('')
