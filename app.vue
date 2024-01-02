@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { CompareState } from './models/compare'
 import type { Link, Results } from './models/result'
 
 interface ResultState {
@@ -13,6 +14,7 @@ const params = new URLSearchParams({ gameContentType: 'games' })
 
 const search = ref<string>('')
 const results = ref<ResultState>({ left: null, right: null, isLoading: false })
+const compare = ref<CompareState>({ left: null, right: null })
 
 const fetchResults = debounce(async () => {
   results.value.isLoading = true
@@ -38,6 +40,14 @@ function resetState() {
   results.value.isLoading = false
 }
 
+function setLeftCompare(value: Link | null) {
+  compare.value.left = value
+}
+
+function setRightCompare(value: Link | null) {
+  compare.value.right = value
+}
+
 watch(search, () => {
   if (search.value.trim().length === 0)
     resetState()
@@ -60,8 +70,8 @@ watch(search, () => {
     </template>
   </UInput>
   <div class="flex grow h-16 w-full gap-4">
-    <ResultList :data="results.left" />
-    <ResultList :data="results.right" />
+    <ResultList :data="results.left" :compare="compare.left" @set="setLeftCompare" />
+    <ResultList :data="results.right" :compare="compare.right" @set="setRightCompare" />
   </div>
-  <ComparisonView />
+  <ComparisonView :compare="compare" />
 </template>

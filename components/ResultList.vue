@@ -3,13 +3,22 @@ import type { Link } from '~/models/result'
 
 interface Props {
   data: Link[] | null
+  compare: Link | null
 }
 
-const { data } = defineProps<Props>()
+interface Emits {
+  (eventName: 'set', value: Link | null): void
+}
+
+const { data, compare } = defineProps<Props>()
+const emit = defineEmits<Emits>()
 </script>
 
 <template>
-  <UCard class="w-full overflow-auto" :ui="{ body: { background: data && data.length > 0 ? 'h-auto' : 'h-full', padding: 'sm:p-4 px-4 py-5' } }">
+  <UCard
+    class="w-full overflow-auto"
+    :ui="{ body: { background: data && data.length > 0 ? 'h-auto' : 'h-full', padding: 'sm:p-4 px-4 py-5' } }"
+  >
     <div v-if="data == null" class="flex h-full items-center justify-center">
       <p class="text-center text-neutral-400">
         Start your search and find out compatibility!
@@ -21,7 +30,7 @@ const { data } = defineProps<Props>()
       </p>
     </div>
     <div v-if="data != null && data.length > 0" class="flex flex-col gap-2">
-      <Result v-for="link of data" :key="link.id" :link="link" />
+      <Result v-for="link of data" :key="link.id" :link="link" :compare="compare" @set="emit('set', $event)" />
     </div>
   </UCard>
 </template>
