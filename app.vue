@@ -8,14 +8,12 @@ interface ResultState {
 }
 
 const API_URL = 'https://store.playstation.com/store/api/chihiro/00_09_000/tumbler'
-const params = new URLSearchParams({
-  gameContentType: 'games',
-})
+const params = new URLSearchParams({ gameContentType: 'games' })
 
 const search = ref<string>('')
 const results = ref<ResultState>({ left: null, right: null, isLoading: false })
 
-watch(search, debounce(async () => {
+const fetchResults = debounce(async () => {
   results.value.isLoading = true
   const left: Promise<Results> = fetch(`${API_URL}/tr/tr/999/${search.value}?${params}`).then(res => res.json())
   const right: Promise<Results> = fetch(`${API_URL}/ru/ru/999/${search.value}?${params}`).then(res => res.json())
@@ -31,14 +29,27 @@ watch(search, debounce(async () => {
     console.error('fetch results error', error)
     results.value.isLoading = false
   }
-}, 700))
+}, 700)
+
+function resetState() {
+  results.value.left = null
+  results.value.right = null
+  results.value.isLoading = false
+}
+
+watch(search, () => {
+  if (search.value.trim().length === 0)
+    resetState()
+  else
+    fetchResults()
+})
 </script>
 
 <template>
   <UInput
-    v-model="search"
-    :loading="results.isLoading" class="border-gray-200" icon="i-heroicons-magnifying-glass-20-solid" size="xl"
-    placeholder="Search..." autocomplete="off" :ui="{ icon: { trailing: { pointer: '' } } }"
+    v-model="search" :loading="results.isLoading" class="border-gray-200"
+    icon="i-heroicons-magnifying-glass-20-solid" size="xl" placeholder="Search..." autocomplete="off"
+    :ui="{ icon: { trailing: { pointer: '' } } }"
   >
     <template #trailing>
       <UButton
