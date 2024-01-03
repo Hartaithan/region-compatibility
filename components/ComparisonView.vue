@@ -6,16 +6,26 @@ interface Props {
 }
 
 const { compare } = defineProps<Props>()
+const extended = extendCompare(compare)
 </script>
 
 <template>
   <UCard class="w-full h-32 flex justify-center items-center  overflow-auto">
-    <p v-if="compare.left === null && compare.right === null" class="text-xl">
+    <p v-if="extended.left === null && extended.right === null" class="text-xl">
       There's nothing to compare.
     </p>
-    <div v-else class="flex gap-9">
-      <p>{{ compare.left?.name }}</p>
-      <p>{{ compare.right?.name }}</p>
+    <div v-else class="flex flex-col justify-center items-center">
+      <div v-if="extended.left" class="flex gap-1">
+        <p v-for="(part, i) in extended.left.parts" :key="i">
+          {{ part }}
+        </p>
+      </div>
+      <div v-if="extended.right" class="flex gap-1">
+        <p v-for="(part, i) in extended.right.parts" :key="i">
+          {{ part }}
+        </p>
+      </div>
+      <p>{{ extended.status }}</p>
     </div>
   </UCard>
 </template>

@@ -1,8 +1,16 @@
-import type { Link } from './result'
+import type { ExtendedLink, Link } from './result'
 
 export interface CompareState {
   left: Link | null
   right: Link | null
+}
+
+export type CompareStatus = 'compatible' | 'not-compatible'
+
+export interface ExtendedCompareState {
+  left: ExtendedLink | null
+  right: ExtendedLink | null
+  status: CompareStatus
 }
 
 export type CompareTarget = 'left' | 'right'

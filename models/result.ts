@@ -13,7 +13,7 @@ export interface Image {
   url: string
 }
 
-export type MetadataType = 'cn_remotePlay' | 'cn_numberOfNetworkPlayers' | 'secondary_classification' | 'game_subgenre' | 'game_genre' | 'playable_platform' | 'subgenre' | 'tertiary_classification' | 'container_type' | 'genre' | 'cn_inGamePurchases' | 'primary_classification' | 'cn_onlinePlayMode'
+export type MetadataType = 'cn_remotePlay' | 'cn_numberOfNetworkPlayers' | 'secondary_classification' | 'game_subgenre' | 'game_genre' | 'playable_platform' | 'subgenre' | 'tertiary_classification' | 'container_type' | 'genre' | 'cn_inGamePurchases' | 'primary_classification' | 'cn_onlinePlayMode' | 'cn_vrEnabled' | 'cn_playstationMove' | 'cn_wirelessController' | 'cn_vrRequired' | 'cn_psEnhanced' | 'cn_numberOfPlayers' | 'cn_dualshockVibration' | 'cn_psVrAimRequired' | 'cn_singstarMicrophone' | 'cn_playstationCamera' | 'cn_psVrAimEnabled'
 
 export interface MetadataItem {
   name: string
@@ -31,7 +31,7 @@ export interface Link {
   activeLocales: string[]
   bucket: string
   container_type: string
-  content_type: number
+  content_type: number | string
   gameContentTypesList: GameContentTypeList[]
   game_contentType: string
   id: string
@@ -50,6 +50,10 @@ export interface Link {
   timestamp: number
   top_category: string
   url: string
+}
+
+export interface ExtendedLink extends Link {
+  parts: string[]
 }
 
 export interface Results {
