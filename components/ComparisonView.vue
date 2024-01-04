@@ -41,6 +41,7 @@ watch(compare, () => {
           {{ `-${extended.value.left.parts[2]}` }}
         </p>
       </UBadge>
+      <Placeholder v-else classes="h-[28px] w-[360px] inset-x-[45px]" />
       <UBadge
         v-if="extended.value.right"
         :class="`py-0.5 px-1 text-md relative whitespace-pre ${statusColors[extended.value.status]}`"
@@ -55,6 +56,7 @@ watch(compare, () => {
           {{ `-${extended.value.right.parts[2]}` }}
         </p>
       </UBadge>
+      <Placeholder v-else classes="h-[28px] w-[360px] inset-x-[45px]" />
     </div>
     <div class="hidden bg-slate-700" />
     <div class="hidden bg-green-700" />
