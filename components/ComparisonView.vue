@@ -20,8 +20,8 @@ watch(compare, () => {
 
 <template>
   <UCard
-    class="w-full h-24 flex justify-center items-center overflow-auto"
-    :ui="{ body: { padding: 'flex h-full grow flex-col items-center justify-center sm:p-4 px-4 py-4' } }"
+    class="w-full h-20 md:h-24 flex justify-center items-center overflow-auto"
+    :ui="{ body: { padding: 'flex h-full grow flex-col items-center justify-center px-2 py-3 sm:px-2 sm:py-3 md:px-4 md:py-5' } }"
   >
     <p v-if="extended.value.left === null && extended.value.right === null" class="text-xl">
       There's nothing to compare.
@@ -29,7 +29,7 @@ watch(compare, () => {
     <div v-else class="w-full flex flex-col gap-2 justify-center items-center">
       <UBadge
         v-if="extended.value.left"
-        :class="`py-0.5 px-1 text-md relative whitespace-pre ${statusColors[extended.value.status]}`"
+        :class="`py-0.5 px-1 text-[10px] sm:text-sm md:text-base relative whitespace-pre ${statusColors[extended.value.status]}`"
       >
         <p class="absolute right-[97%]">
           {{ `${extended.value.left.parts[0]}-` }}
@@ -41,10 +41,10 @@ watch(compare, () => {
           {{ `-${extended.value.left.parts[2]}` }}
         </p>
       </UBadge>
-      <Placeholder v-else classes="h-[28px] w-[360px] inset-x-[45px]" />
+      <Placeholder v-else classes="h-[20px] sm:h-[22px] md:h-[28px] w-[95%] xs:w-[90%] sm:w-[80%] md:w-[600px]" />
       <UBadge
         v-if="extended.value.right"
-        :class="`py-0.5 px-1 text-md relative whitespace-pre ${statusColors[extended.value.status]}`"
+        :class="`py-0.6 px-1 text-[10px] sm:text-sm md:text-base relative whitespace-pre ${statusColors[extended.value.status]}`"
       >
         <p class="absolute right-[97%]">
           {{ `${extended.value.right.parts[0]}-` }}
@@ -56,7 +56,7 @@ watch(compare, () => {
           {{ `-${extended.value.right.parts[2]}` }}
         </p>
       </UBadge>
-      <Placeholder v-else classes="h-[28px] w-[360px] inset-x-[45px]" />
+      <Placeholder v-else classes="h-[20px] sm:h-[22px] md:h-[28px] w-[95%] xs:w-[90%] sm:w-[80%] md:w-[600px]" />
     </div>
     <div class="hidden bg-slate-700" />
     <div class="hidden bg-green-700" />

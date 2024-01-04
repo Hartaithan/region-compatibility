@@ -70,7 +70,7 @@ watch(search, () => {
       />
     </template>
   </UInput>
-  <div class="flex grow h-16 w-full gap-4">
+  <div class="flex grow h-16 w-full gap-3 md:gap-4">
     <ResultList :data="results.left" target="left" />
     <ResultList :data="results.right" target="right" />
   </div>

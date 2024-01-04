@@ -13,15 +13,15 @@ const { data, target } = defineProps<Props>()
 <template>
   <UCard
     class="w-full overflow-auto"
-    :ui="{ body: { background: data && data.length > 0 ? 'h-auto' : 'h-full', padding: 'sm:p-4 px-4 py-5' } }"
+    :ui="{ body: { background: data && data.length > 0 ? 'h-auto' : 'h-full', padding: 'px-2 py-3 sm:px-2 sm:py-3 md:px-4 md:py-5' } }"
   >
     <div v-if="data == null" class="flex h-full items-center justify-center">
-      <p class="text-center text-neutral-400">
+      <p class="text-sm md:text-base text-center text-neutral-400">
         Start your search and find out compatibility!
       </p>
     </div>
     <div v-if="data != null && data.length === 0" class="flex h-full items-center justify-center">
-      <p class="text-center text-neutral-400">
+      <p class="text-sm md:text-base text-center text-neutral-400">
         Nothing found!
       </p>
     </div>
