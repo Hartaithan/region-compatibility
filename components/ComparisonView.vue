@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { statusColors } from '~/constants/status'
 import type { CompareState, ExtendedCompareState } from '~/models/compare'
 
 interface Props {
@@ -11,12 +12,10 @@ interface Reactive<T> {
 
 const { compare } = defineProps<Props>()
 const extended = reactive<Reactive<ExtendedCompareState>>({ value: compare as ExtendedCompareState })
-const isCompatible = reactive<Reactive<boolean>>({ value: false })
 
 watch(compare, () => {
   const value = extendCompare(compare)
   extended.value = value
-  isCompatible.value = value.status === 'compatible'
 })
 </script>
 
@@ -26,7 +25,7 @@ watch(compare, () => {
       There's nothing to compare.
     </p>
     <div v-else class="w-full flex flex-col gap-2 justify-center items-center">
-      <UBadge v-if="extended.value.left" :class="`py-0.5 px-1 text-md relative whitespace-pre ${isCompatible.value ? '!bg-green-700' : '!bg-red-700'} `">
+      <UBadge v-if="extended.value.left" :class="`py-0.5 px-1 text-md relative whitespace-pre ${statusColors[extended.value.status]}`">
         <p class="absolute right-[97%]">
           {{ `${extended.value.left.parts[0]}-` }}
         </p>
@@ -37,7 +36,7 @@ watch(compare, () => {
           {{ `-${extended.value.left.parts[2]}` }}
         </p>
       </UBadge>
-      <UBadge v-if="extended.value.right" :class="`py-0.5 px-1 text-md relative whitespace-pre ${isCompatible.value ? '!bg-green-700' : '!bg-red-700'}`">
+      <UBadge v-if="extended.value.right" :class="`py-0.5 px-1 text-md relative whitespace-pre ${statusColors[extended.value.status]}`">
         <p class="absolute right-[97%]">
           {{ `${extended.value.right.parts[0]}-` }}
         </p>

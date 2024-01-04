@@ -5,7 +5,7 @@ export interface CompareState {
   right: Link | null
 }
 
-export type CompareStatus = 'compatible' | 'not-compatible'
+export type CompareStatus = 'not-ready' | 'compatible' | 'not-compatible'
 
 export interface ExtendedCompareState {
   left: ExtendedLink | null

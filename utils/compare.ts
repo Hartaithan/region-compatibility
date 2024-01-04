@@ -11,7 +11,7 @@ export function getRegionFromUrl(url: string | undefined): string {
 export function extendCompare(compare: CompareState): ExtendedCompareState {
   if (compare.left === null && compare.right === null)
     return compare as ExtendedCompareState
-  let status: CompareStatus = 'not-compatible'
+  let status: CompareStatus = 'not-ready'
   const left: ExtendedLink | null = compare.left ? JSON.parse(JSON.stringify(compare.left)) : null
   if (left)
     left.parts = left.id.split('-')
