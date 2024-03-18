@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { Button } from './components/ui/button'
+import { Search } from 'lucide-vue-next'
+import { Input } from './components/ui/input'
 </script>
 
 <template>
-  <main class="h-full flex flex-col justify-center items-center">
-    <Button>Hello World!</Button>
-  </main>
+  <div class="relative w-full items-center">
+    <Input id="search" type="text" placeholder="Search..." class="pl-11" />
+    <span class="absolute start-0 inset-y-0 flex items-center justify-center px-3 pointer-events-none">
+      <Search class="size-5 text-muted-foreground" />
+    </span>
+  </div>
 </template>
-
-<style scoped>
-
-</style>
