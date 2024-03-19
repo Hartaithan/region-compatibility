@@ -3,6 +3,7 @@ import { provide, ref, watch } from 'vue'
 import { Search } from 'lucide-vue-next'
 import { debounce } from './utils/debounce'
 import { Input } from './components/ui/input'
+import { Spinner } from './components/ui/spinner'
 import type { Link, Results } from './models/result'
 import type { CompareProvider, CompareState, CompareTarget } from './models/compare'
 
@@ -64,7 +65,8 @@ watch(search, () => {
   <div class="relative w-full items-center">
     <Input id="search" v-model="search" type="text" placeholder="Search..." class="pl-11" />
     <span class="absolute start-0 inset-y-0 flex items-center justify-center px-3 pointer-events-none">
-      <Search class="size-5 text-muted-foreground" />
+      <Spinner v-if="results.isLoading" />
+      <Search v-else class="size-5 text-muted-foreground" />
     </span>
   </div>
   <div>
