@@ -23,7 +23,7 @@ watch(compare, () => {
 
 <template>
   <div
-    class="rounded-lg ring-1 ring-input shadow w-full h-20 md:h-24 flex justify-center items-center px-2 py-3 sm:px-2 sm:py-3 md:px-4 md:py-5"
+    class="bg-card rounded-lg ring-1 ring-border shadow w-full h-20 md:h-24 flex justify-center items-center px-2 py-3 sm:px-2 sm:py-3 md:px-4 md:py-5"
   >
     <p v-if="extended.value.left === null && extended.value.right === null" class="text-xl">
       There's nothing to compare.
