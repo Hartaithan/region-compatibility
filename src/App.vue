@@ -7,6 +7,7 @@ import { Spinner } from './components/ui/spinner'
 import type { Link, Results } from './models/result'
 import type { CompareProvider, CompareState, CompareTarget } from './models/compare'
 import ResultList from './components/layout/ResultList.vue'
+import ComparisonView from './components/layout/ComparisonView.vue'
 
 interface ResultState {
   left: Link[] | null
@@ -74,4 +75,5 @@ watch(search, () => {
     <ResultList :data="results.left" target="left" />
     <ResultList :data="results.right" target="right" />
   </div>
+  <ComparisonView :compare="compare" />
 </template>
