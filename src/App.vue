@@ -6,6 +6,7 @@ import { Input } from './components/ui/input'
 import { Spinner } from './components/ui/spinner'
 import type { Link, Results } from './models/result'
 import type { CompareProvider, CompareState, CompareTarget } from './models/compare'
+import ResultList from './components/layout/ResultList.vue'
 
 interface ResultState {
   left: Link[] | null
@@ -69,9 +70,8 @@ watch(search, () => {
       <Search v-else class="size-5 text-muted-foreground" />
     </span>
   </div>
-  <div>
-    <pre class="text-[9px]">compare: {{ JSON.stringify(compare, null, 2) }}</pre>
-    <br>
-    <pre class="text-[9px]">results: {{ JSON.stringify(results, null, 2) }}</pre>
+  <div class="flex grow h-16 w-full gap-3 md:gap-4">
+    <ResultList :data="results.left" target="left" />
+    <ResultList :data="results.right" target="right" />
   </div>
 </template>
