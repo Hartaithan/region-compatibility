@@ -8,7 +8,8 @@ import type { Link, Results } from './models/result'
 import type { CompareProvider, CompareState, CompareTarget } from './models/compare'
 import ResultList from './components/layout/ResultList.vue'
 import ComparisonView from './components/layout/ComparisonView.vue'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from './components/ui/select'
+import { Select } from './components/ui/select'
+import RegionOptions from './components/layout/RegionOptions.vue'
 
 interface ResultState {
   left: Link[] | null
@@ -27,12 +28,17 @@ const params = new URLSearchParams({ gameContentType: 'games' })
 const search = ref<string>('')
 const results = ref<ResultState>({ left: null, right: null, isLoading: false })
 const compare = ref<CompareState>({ left: null, right: null })
-const regions = ref<RegionsState>({ left: 'tr', right: 'ru' })
+const regions = ref<RegionsState>({ left: 'tr:tr', right: 'ru:ru' })
+
+function formatRegion(value: string) {
+  const [language, country] = value.split(':')
+  return `${country}/${language}`
+}
 
 const fetchResults = debounce(async () => {
   results.value.isLoading = true
-  const left: Promise<Results> = fetch(`${API_URL}/${regions.value.left}/${regions.value.left}/999/${search.value}?${params}`).then(res => res.json())
-  const right: Promise<Results> = fetch(`${API_URL}/${regions.value.right}/${regions.value.right}/999/${search.value}?${params}`).then(res => res.json())
+  const left: Promise<Results> = fetch(`${API_URL}/${formatRegion(regions.value.left)}/999/${search.value}?${params}`).then(res => res.json())
+  const right: Promise<Results> = fetch(`${API_URL}/${formatRegion(regions.value.right)}/999/${search.value}?${params}`).then(res => res.json())
   try {
     const [leftRes, rightRes] = await Promise.allSettled([left, right])
     if (leftRes.status === 'fulfilled')
@@ -80,34 +86,10 @@ watch(search, () => {
   </div>
   <div class="flex w-full gap-3 md:gap-4">
     <Select v-model="regions.left">
-      <SelectTrigger>
-        <SelectValue placeholder="Select a region" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectItem value="tr">
-            Turkey
-          </SelectItem>
-          <SelectItem value="ru">
-            Russia
-          </SelectItem>
-        </SelectGroup>
-      </SelectContent>
+      <RegionOptions />
     </Select>
     <Select v-model="regions.right">
-      <SelectTrigger>
-        <SelectValue placeholder="Select a region" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectGroup>
-          <SelectItem value="tr">
-            Turkey
-          </SelectItem>
-          <SelectItem value="ru">
-            Russia
-          </SelectItem>
-        </SelectGroup>
-      </SelectContent>
+      <RegionOptions />
     </Select>
   </div>
   <div class="flex grow h-16 w-full gap-3 md:gap-4">
