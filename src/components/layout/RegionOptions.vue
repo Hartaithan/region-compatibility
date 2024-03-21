@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 </script>
 
 <template>
