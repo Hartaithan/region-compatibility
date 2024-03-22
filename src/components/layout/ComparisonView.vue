@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { reactive, watch } from 'vue'
 import type { CompareState, ExtendedCompareState } from '../../models/compare'
-import { statusColors } from '../../constants/status'
 import Placeholder from './Placeholder.vue'
+import ComparisonItem from './ComparisonItem.vue'
 import { extendCompare } from '@/utils/compare'
 
 interface Props {
@@ -29,35 +29,9 @@ watch(compare, () => {
       There's nothing to compare.
     </p>
     <div v-else class="w-full flex flex-col gap-2 justify-center items-center">
-      <div
-        v-if="extended.value.left"
-        :class="`inline-flex items-center font-medium rounded-md text-xs bg-primary-400 text-gray-900 py-0.5 px-1 text-[10px] sm:text-sm md:text-base relative whitespace-pre ${statusColors[extended.value.status]}`"
-      >
-        <p class="absolute right-[97%]">
-          {{ `${extended.value.left.parts[0]}-` }}
-        </p>
-        <p>
-          {{ extended.value.left.parts[1] }}
-        </p>
-        <p class="absolute left-[97%]">
-          {{ `-${extended.value.left.parts[2]}` }}
-        </p>
-      </div>
+      <ComparisonItem v-if="extended.value.left" :compare="extended.value.left" :status="extended.value.status" />
       <Placeholder v-else classes="h-[20px] sm:h-[22px] md:h-[28px] w-[95%] xs:w-[90%] sm:w-[80%] md:w-[600px]" />
-      <div
-        v-if="extended.value.right"
-        :class="`inline-flex items-center font-medium rounded-md text-xs bg-primary-400 text-gray-900 py-0.5 px-1 text-[10px] sm:text-sm md:text-base relative whitespace-pre ${statusColors[extended.value.status]}`"
-      >
-        <p class="absolute right-[97%]">
-          {{ `${extended.value.right.parts[0]}-` }}
-        </p>
-        <p>
-          {{ extended.value.right.parts[1] }}
-        </p>
-        <p class="absolute left-[97%]">
-          {{ `-${extended.value.right.parts[2]}` }}
-        </p>
-      </div>
+      <ComparisonItem v-if="extended.value.right" :compare="extended.value.right" :status="extended.value.status" />
       <Placeholder v-else classes="h-[20px] sm:h-[22px] md:h-[28px] w-[95%] xs:w-[90%] sm:w-[80%] md:w-[600px]" />
     </div>
     <div class="hidden bg-slate-700" />
