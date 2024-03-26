@@ -3,6 +3,7 @@ import { reactive, watch } from 'vue'
 import type { CompareState, ExtendedCompareState } from '../../models/compare'
 import Placeholder from './Placeholder.vue'
 import ComparisonItem from './ComparisonItem.vue'
+import Card from './Card.vue'
 import { extendCompare } from '@/utils/compare'
 
 interface Props {
@@ -22,9 +23,7 @@ watch(compare, () => {
 </script>
 
 <template>
-  <div
-    class="bg-card rounded-lg ring-1 ring-border shadow w-full h-20 md:h-24 flex justify-center items-center px-2 py-3 sm:px-2 sm:py-3 md:px-4 md:py-5"
-  >
+  <Card class="w-full h-20 md:h-24 flex justify-center items-center">
     <p v-if="extended.value.left === null && extended.value.right === null" class="text-xl">
       There's nothing to compare.
     </p>
@@ -37,5 +36,5 @@ watch(compare, () => {
     <div class="hidden bg-slate-700" />
     <div class="hidden bg-green-700" />
     <div class="hidden bg-red-700" />
-  </div>
+  </Card>
 </template>
