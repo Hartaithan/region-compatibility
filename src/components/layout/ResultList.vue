@@ -13,7 +13,7 @@ const { data, target } = defineProps<Props>()
 </script>
 
 <template>
-  <Card class="w-full overflow-auto">
+  <Card class="w-full grow md:grow-0 overflow-auto">
     <div v-if="data == null" class="flex h-full items-center justify-center">
       <p class="text-sm md:text-base text-center text-neutral-500">
         Start your search and find out compatibility!
