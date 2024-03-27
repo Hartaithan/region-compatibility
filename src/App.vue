@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, ref, watch } from 'vue'
+import { provide, ref } from 'vue'
 import { Search } from 'lucide-vue-next'
 import { debounce } from './utils/debounce'
 import { Input } from './components/ui/input'
@@ -63,22 +63,23 @@ function setCompare(target: CompareTarget, value: Link | null) {
   compare.value[target] = value
 }
 
-provide<CompareProvider>('compare', {
-  compare,
-  setCompare,
-})
-
-watch(search, () => {
-  if (search.value.trim().length === 0)
+function handleSearch(event: Event) {
+  const { value } = event.target as HTMLInputElement
+  if (value.trim().length === 0)
     resetState()
   else
     fetchResults()
+}
+
+provide<CompareProvider>('compare', {
+  compare,
+  setCompare,
 })
 </script>
 
 <template>
   <div class="relative w-full items-center">
-    <Input id="search" v-model="search" type="text" placeholder="Search..." class="pl-11" />
+    <Input id="search" v-model="search" type="text" placeholder="Search..." class="pl-11" @input="handleSearch" />
     <span class="absolute start-0 inset-y-0 flex items-center justify-center px-3 pointer-events-none">
       <Spinner v-if="results.isLoading" />
       <Search v-else class="size-5 text-muted-foreground" />
