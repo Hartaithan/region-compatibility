@@ -23,7 +23,7 @@ watch(compare, () => {
 </script>
 
 <template>
-  <Card class="w-full h-20 md:h-24 flex justify-center items-center">
+  <Card class="w-full h-20 md:h-24 flex justify-center items-center overflow-hidden">
     <p v-if="extended.value.left === null && extended.value.right === null" class="text-xl">
       There's nothing to compare.
     </p>
