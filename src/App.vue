@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, ref } from 'vue'
+import { type Ref, provide, ref } from 'vue'
 import { Search } from 'lucide-vue-next'
 import { debounce } from './utils/debounce'
 import { Input } from './components/ui/input'
@@ -11,10 +11,15 @@ import ComparisonView from './components/layout/ComparisonView.vue'
 import { Select } from './components/ui/select'
 import RegionOptions from './components/layout/RegionOptions.vue'
 
+interface LoadersState {
+  input: boolean
+  left: boolean
+  right: boolean
+}
+
 interface ResultState {
   left: Link[] | null
   right: Link[] | null
-  isLoading: boolean
 }
 
 interface RegionsState {
@@ -26,7 +31,8 @@ const API_URL = import.meta.env.VITE_API_URL as string
 const params = new URLSearchParams({ gameContentType: 'games' })
 
 const search = ref<string>('')
-const results = ref<ResultState>({ left: null, right: null, isLoading: false })
+const loaders = ref<LoadersState>({ input: false, left: false, right: false })
+const results = ref<ResultState>({ left: null, right: null })
 const compare = ref<CompareState>({ left: null, right: null })
 const regions = ref<RegionsState>({ left: 'tr:tr', right: 'ru:ru' })
 
@@ -35,8 +41,13 @@ function formatRegion(value: string) {
   return `${country}/${language}`
 }
 
+function handleStateValue<T>(state: Ref<Record<string, T>>, value: T) {
+  for (const key in state.value)
+    state.value[key] = value
+}
+
 const fetchResults = debounce(async () => {
-  results.value.isLoading = true
+  handleStateValue(loaders, true)
   const left: Promise<Results> = fetch(`${API_URL}/${formatRegion(regions.value.left)}/999/${search.value}?${params}`).then(res => res.json())
   const right: Promise<Results> = fetch(`${API_URL}/${formatRegion(regions.value.right)}/999/${search.value}?${params}`).then(res => res.json())
   try {
@@ -45,18 +56,17 @@ const fetchResults = debounce(async () => {
       results.value.left = leftRes.value?.links ?? []
     if (rightRes.status === 'fulfilled')
       results.value.right = rightRes.value?.links ?? []
-    results.value.isLoading = false
+    handleStateValue(loaders, false)
   }
   catch (error) {
     console.error('fetch results error', error)
-    results.value.isLoading = false
+    handleStateValue(loaders, false)
   }
 }, 700)
 
 function resetState() {
-  results.value.left = null
-  results.value.right = null
-  results.value.isLoading = false
+  handleStateValue<Link[] | null>(results, null)
+  handleStateValue(loaders, false)
 }
 
 function setCompare(target: CompareTarget, value: Link | null) {
@@ -74,15 +84,15 @@ function handleSearch(event: Event) {
 async function handleRegion(value: string, field: 'left' | 'right') {
   if (search.value.trim().length === 0)
     return
-  results.value.isLoading = true
+  loaders.value[field] = true
   try {
     const response = await fetch(`${API_URL}/${formatRegion(value)}/999/${search.value}?${params}`).then(res => res.json())
     results.value[field] = response?.links ?? []
-    results.value.isLoading = false
+    loaders.value[field] = false
   }
   catch (error) {
     console.error(`fetch ${field} results error`, error)
-    results.value.isLoading = false
+    loaders.value[field] = false
   }
 }
 
@@ -96,7 +106,7 @@ provide<CompareProvider>('compare', {
   <div class="relative w-full items-center">
     <Input id="search" v-model="search" type="text" placeholder="Search..." class="pl-11" @input="handleSearch" />
     <span class="absolute start-0 inset-y-0 flex items-center justify-center px-3 pointer-events-none">
-      <Spinner v-if="results.isLoading" />
+      <Spinner v-if="loaders.input" />
       <Search v-else class="size-5 text-muted-foreground" />
     </span>
   </div>
@@ -109,8 +119,8 @@ provide<CompareProvider>('compare', {
     </Select>
   </div>
   <div class="flex flex-col md:flex-row grow h-16 w-full gap-3 md:gap-4">
-    <ResultList :data="results.left" target="left" />
-    <ResultList :data="results.right" target="right" />
+    <ResultList :data="results.left" :loading="loaders.left" target="left" />
+    <ResultList :data="results.right" :loading="loaders.right" target="right" />
   </div>
   <ComparisonView :compare="compare" />
 </template>
