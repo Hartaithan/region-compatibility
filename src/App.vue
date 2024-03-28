@@ -71,6 +71,21 @@ function handleSearch(event: Event) {
     fetchResults()
 }
 
+async function handleRegion(value: string, field: 'left' | 'right') {
+  if (search.value.trim().length === 0)
+    return
+  results.value.isLoading = true
+  try {
+    const response = await fetch(`${API_URL}/${formatRegion(value)}/999/${search.value}?${params}`).then(res => res.json())
+    results.value[field] = response?.links ?? []
+    results.value.isLoading = false
+  }
+  catch (error) {
+    console.error(`fetch ${field} results error`, error)
+    results.value.isLoading = false
+  }
+}
+
 provide<CompareProvider>('compare', {
   compare,
   setCompare,
@@ -86,10 +101,10 @@ provide<CompareProvider>('compare', {
     </span>
   </div>
   <div class="flex w-full gap-3 md:gap-4">
-    <Select v-model="regions.left">
+    <Select v-model="regions.left" @update:model-value="handleRegion($event, 'left')">
       <RegionOptions />
     </Select>
-    <Select v-model="regions.right">
+    <Select v-model="regions.right" @update:model-value="handleRegion($event, 'right')">
       <RegionOptions />
     </Select>
   </div>
