@@ -15,7 +15,7 @@ const { data, target, loading } = defineProps<Props>()
 </script>
 
 <template>
-  <Card class="w-full grow md:grow-0 overflow-auto">
+  <Card class="w-full grow md:grow-0 overflow-auto flex-1 md:flex-[2]">
     <div v-if="loading" class="flex h-full items-center justify-center">
       <Spinner class="w-10 h-10" :stroke-width="2" />
     </div>

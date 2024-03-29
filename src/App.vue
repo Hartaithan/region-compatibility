@@ -118,7 +118,7 @@ provide<CompareProvider>('compare', {
       <RegionOptions />
     </Select>
   </div>
-  <div class="flex flex-col md:flex-row grow h-16 w-full gap-3 md:gap-4">
+  <div class="flex flex-col md:flex-row grow h-16 w-full gap-3 md:gap-4 md:flex-[2]">
     <ResultList :data="results.left" :loading="loaders.left" target="left" />
     <ResultList :data="results.right" :loading="loaders.right" target="right" />
   </div>
