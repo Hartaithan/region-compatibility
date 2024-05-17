@@ -74,3 +74,5 @@ export interface Results {
   total_results: number
   total_suggested: number
 }
+
+export type Pagination = Omit<Results, 'links'>
