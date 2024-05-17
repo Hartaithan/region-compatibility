@@ -41,6 +41,10 @@ function formatRegion(value: string) {
   return `${country}/${language}`
 }
 
+function getSearchRequest(region: string, search: string, params: URLSearchParams) {
+  return fetch(`${API_URL}/${formatRegion(region)}/999/${search}?${params}`).then(res => res.json())
+}
+
 function handleStateValue<T>(state: Ref<Record<string, T>>, value: T) {
   for (const key in state.value)
     state.value[key] = value
@@ -48,8 +52,8 @@ function handleStateValue<T>(state: Ref<Record<string, T>>, value: T) {
 
 const fetchResults = debounce(async () => {
   handleStateValue(loaders, true)
-  const left: Promise<Results> = fetch(`${API_URL}/${formatRegion(regions.value.left)}/999/${search.value}?${params}`).then(res => res.json())
-  const right: Promise<Results> = fetch(`${API_URL}/${formatRegion(regions.value.right)}/999/${search.value}?${params}`).then(res => res.json())
+  const left: Promise<Results> = getSearchRequest(regions.value.left, search.value, params)
+  const right: Promise<Results> = getSearchRequest(regions.value.right, search.value, params)
   try {
     const [leftRes, rightRes] = await Promise.allSettled([left, right])
     if (leftRes.status === 'fulfilled')
@@ -86,7 +90,7 @@ async function handleRegion(value: string, field: 'left' | 'right') {
     return
   loaders.value[field] = true
   try {
-    const response = await fetch(`${API_URL}/${formatRegion(value)}/999/${search.value}?${params}`).then(res => res.json())
+    const response = await getSearchRequest(value, search.value, params)
     results.value[field] = response?.links ?? []
     loaders.value[field] = false
   }
