@@ -32,6 +32,8 @@ interface PaginationState {
   right: Pagination | null
 }
 
+type PaginationLoadersState = Pick<LoadersState, 'left' | 'right'>
+
 const API_URL = import.meta.env.VITE_API_URL as string
 const params = new URLSearchParams({ gameContentType: 'games', size: '20', start: '0' })
 
@@ -41,6 +43,7 @@ const results = ref<ResultState>({ left: null, right: null })
 const compare = ref<CompareState>({ left: null, right: null })
 const regions = ref<RegionsState>({ left: 'tr:tr', right: 'ru:ru' })
 const pagination = ref<PaginationState>({ left: null, right: null })
+const paginationLoaders = ref<PaginationLoadersState>({ left: false, right: false })
 
 function formatRegion(value: string) {
   const [language, country] = value.split(':')
@@ -57,10 +60,10 @@ function handleStateValue<T>(state: Ref<Record<string, T>>, value: T) {
 }
 
 const fetchResults = debounce(async () => {
-  handleStateValue(loaders, true)
   const left: Promise<Results> = getSearchRequest(regions.value.left, search.value, params)
   const right: Promise<Results> = getSearchRequest(regions.value.right, search.value, params)
   try {
+    handleStateValue(loaders, true)
     const [leftRes, rightRes] = await Promise.allSettled([left, right])
     if (leftRes.status === 'fulfilled') {
       const { links, ...paginationRes } = leftRes.value
@@ -72,10 +75,11 @@ const fetchResults = debounce(async () => {
       results.value.right = links ?? []
       pagination.value.right = paginationRes ?? null
     }
-    handleStateValue(loaders, false)
   }
   catch (error) {
     console.error('fetch results error', error)
+  }
+  finally {
     handleStateValue(loaders, false)
   }
 }, 700)
@@ -100,14 +104,15 @@ function handleSearch(event: Event) {
 async function handleRegion(value: string, field: 'left' | 'right') {
   if (search.value.trim().length === 0)
     return
-  loaders.value[field] = true
   try {
+    loaders.value[field] = true
     const response = await getSearchRequest(value, search.value, params)
     results.value[field] = response?.links ?? []
-    loaders.value[field] = false
   }
   catch (error) {
     console.error(`fetch ${field} results error`, error)
+  }
+  finally {
     loaders.value[field] = false
   }
 }
@@ -120,6 +125,7 @@ async function handleLeftNextPage() {
   nextPageParams.set('start', nextStart.toString())
   const left: Promise<Results> = getSearchRequest(regions.value.left, search.value, nextPageParams)
   try {
+    paginationLoaders.value.left = true
     const response = await left
     const { links, ...paginationRes } = response
     if (links && results.value.left)
@@ -128,6 +134,9 @@ async function handleLeftNextPage() {
   }
   catch (error) {
     console.error(`fetch left next page results error`, error)
+  }
+  finally {
+    paginationLoaders.value.left = false
   }
 }
 
@@ -139,6 +148,7 @@ async function handleRightNextPage() {
   nextPageParams.set('start', nextStart.toString())
   const right: Promise<Results> = getSearchRequest(regions.value.right, search.value, nextPageParams)
   try {
+    paginationLoaders.value.right = true
     const response = await right
     const { links, ...paginationRes } = response
     if (links && results.value.right)
@@ -147,6 +157,9 @@ async function handleRightNextPage() {
   }
   catch (error) {
     console.error(`fetch right next page results error`, error)
+  }
+  finally {
+    paginationLoaders.value.right = false
   }
 }
 
@@ -173,8 +186,8 @@ provide<CompareProvider>('compare', {
     </Select>
   </div>
   <div class="flex flex-col md:flex-row grow h-16 w-full gap-3 md:gap-4 md:flex-[2]">
-    <ResultList :data="results.left" :loading="loaders.left" target="left" :pagination="pagination.left" @on-next-page="handleLeftNextPage" />
-    <ResultList :data="results.right" :loading="loaders.right" target="right" :pagination="pagination.right" @on-next-page="handleRightNextPage" />
+    <ResultList :data="results.left" :loading="loaders.left" target="left" :pagination="pagination.left" :pagination-loading="paginationLoaders.left" @on-next-page="handleLeftNextPage" />
+    <ResultList :data="results.right" :loading="loaders.right" target="right" :pagination="pagination.right" :pagination-loading="paginationLoaders.right" @on-next-page="handleRightNextPage" />
   </div>
   <ComparisonView :compare="compare" />
 </template>

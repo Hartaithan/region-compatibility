@@ -9,11 +9,12 @@ import FetchMoreButton from './FetchMoreButton.vue'
 interface Props {
   data: Link[] | null
   loading: boolean
-  pagination: Pagination | null
   target: CompareTarget
+  pagination: Pagination | null
+  paginationLoading: boolean
 }
 
-const { data, loading, pagination, target } = defineProps<Props>()
+const { data, loading, target, pagination, paginationLoading } = defineProps<Props>()
 const emit = defineEmits(['onNextPage'])
 </script>
 
@@ -34,7 +35,7 @@ const emit = defineEmits(['onNextPage'])
     </div>
     <div v-if="!loading && data != null && data.length > 0" class="flex flex-col gap-2">
       <Result v-for="link of data" :key="link.id" :link="link" :target="target" />
-      <FetchMoreButton v-if="pagination && data.length < pagination.total_results" @click="emit('onNextPage')" />
+      <FetchMoreButton v-if="pagination && data.length < pagination.total_results" :loading="paginationLoading" @click="emit('onNextPage')" />
     </div>
   </Card>
 </template>
