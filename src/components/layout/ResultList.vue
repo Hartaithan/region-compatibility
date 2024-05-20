@@ -4,6 +4,7 @@ import type { Link, Pagination } from '../../models/result'
 import { Spinner } from '../ui/spinner'
 import Card from './Card.vue'
 import Result from './Result.vue'
+import FetchMoreButton from './FetchMoreButton.vue'
 
 interface Props {
   data: Link[] | null
@@ -33,9 +34,7 @@ const emit = defineEmits(['onNextPage'])
     </div>
     <div v-if="!loading && data != null && data.length > 0" class="flex flex-col gap-2">
       <Result v-for="link of data" :key="link.id" :link="link" :target="target" />
-      <button v-if="pagination && data.length < pagination.total_results" class="w-full" @click="emit('onNextPage')">
-        Fetch more
-      </button>
+      <FetchMoreButton v-if="pagination && data.length < pagination.total_results" @click="emit('onNextPage')" />
     </div>
   </Card>
 </template>
