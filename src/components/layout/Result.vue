@@ -30,7 +30,7 @@ function onChange(checked: boolean) {
           {{ link.id }}
         </p>
         <p class="text-[8px] md:text-xs text-neutral-500">
-          {{ link.playable_platform.join(',') }} | {{ link.gameContentTypesList.map((i) => i.key).join(',') }}
+          {{ link.playable_platform.join(', ') }} | {{ link.gameContentTypesList.map((i) => i.key).join(', ') }}
         </p>
       </div>
     </div>
